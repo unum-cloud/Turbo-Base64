@@ -139,3 +139,6 @@ clean:
 
 cleanw:
 	del /S *.o
+
+libtb64.a: $(LIB)
+	ar rcs $@ $^
