@@ -64,17 +64,15 @@ target_compile_options(_b64_v128 PRIVATE ${MSSE} -falign-loops -fPIC)
 # Use a list to collect all object libraries.
 set(_b64_objs _b64_scalar _b64_v128)
 
-if(ARCH_AMD64)
+if(ARCH_AMD64 AND NOT APPLE)
     # Compile turbob64v128.c for the second time.
     add_library(_b64_avx OBJECT turbob64v128.c)
     target_compile_options(_b64_avx PRIVATE -march=corei7-avx -mtune=corei7-avx -mno-aes -fstrict-aliasing -fPIC)
     list(APPEND _b64_objs _b64_avx)
 
-    if(NOT APPLE)
-        add_library(_b64_v256 OBJECT turbob64v256.c)
-        target_compile_options(_b64_v256 PRIVATE -march=haswell -fstrict-aliasing -falign-loops -fPIC)
-        list(APPEND _b64_objs _b64_v256)
-    endif()
+    add_library(_b64_v256 OBJECT turbob64v256.c)
+    target_compile_options(_b64_v256 PRIVATE -march=haswell -fstrict-aliasing -falign-loops -fPIC)
+    list(APPEND _b64_objs _b64_v256)
 endif()
 
 if(BUILD_SHARED_LIBS)
